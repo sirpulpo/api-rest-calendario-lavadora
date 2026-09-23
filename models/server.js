@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const { dbConnection } = require('../db/config');
 
 
 class Server {
@@ -8,6 +9,7 @@ class Server {
 		this.port = process.env.PORT || 4000;
 
 		this.middlewares();
+		this.dbConnect();
 		this.routes();
 	}
 
@@ -17,6 +19,10 @@ class Server {
 
 		// Lectura y parseo del body
 		this.app.use(express.json());
+	}
+
+	async dbConnect() {
+		await dbConnection();
 	}
 
 	routes() {
