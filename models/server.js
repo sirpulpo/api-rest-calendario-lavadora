@@ -8,6 +8,8 @@ class Server {
 		this.app = express();
 		this.port = process.env.PORT || 4000;
 
+		this.authPath = '/api/auth';
+
 		this.middlewares();
 		this.dbConnect();
 		this.routes();
@@ -28,7 +30,8 @@ class Server {
 	routes() {
 		this.app.get('/', (req, res) => {
 			res.send('API is running');
-		})
+		});
+		this.app.use(this.authPath, require('../routes/user'));
 	}
 
 	listen() {
