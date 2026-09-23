@@ -8,6 +8,7 @@ class Server {
 		this.app = express();
 		this.port = process.env.PORT || 4000;
 
+		this.userPath = '/api/users';
 		this.authPath = '/api/auth';
 
 		this.middlewares();
@@ -31,7 +32,8 @@ class Server {
 		this.app.get('/', (req, res) => {
 			res.send('API is running');
 		});
-		this.app.use(this.authPath, require('../routes/user'));
+		this.app.use(this.userPath, require('../routes/user'));
+		this.app.use(this.authPath, require('../routes/auth'));
 	}
 
 	listen() {
