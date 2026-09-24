@@ -21,10 +21,13 @@ const UserSchema = new Schema({
 		required: [true, 'Color is required'],
 		unique: true
 	},
+	nipChangedAt: {
+		type: Date,
+	},
 });
 
 UserSchema.method('toJSON', function() {
-	const { nip, __v, _id, ...object } = this.toObject();
+	const { nip, nipChangedAt, __v, _id, ...object } = this.toObject();
 	object.uid = _id;
 	return object;
 });
