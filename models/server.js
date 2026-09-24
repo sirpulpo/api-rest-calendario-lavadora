@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const { dbConnection } = require('../db/config');
 
 
 class Server {
@@ -7,7 +8,12 @@ class Server {
 		this.app = express();
 		this.port = process.env.PORT || 4000;
 
+		this.userPath = '/api/users';
+		this.authPath = '/api/auth';
+		this.reservationPath = '/api/reservations';
+
 		this.middlewares();
+		this.dbConnect();
 		this.routes();
 	}
 
@@ -19,10 +25,17 @@ class Server {
 		this.app.use(express.json());
 	}
 
+	async dbConnect() {
+		await dbConnection();
+	}
+
 	routes() {
 		this.app.get('/', (req, res) => {
 			res.send('API is running');
-		})
+		});
+		this.app.use(this.userPath, require('../routes/user'));
+		this.app.use(this.authPath, require('../routes/auth'));
+		this.app.use(this.reservationPath, require('../routes/reservation'));
 	}
 
 	listen() {
