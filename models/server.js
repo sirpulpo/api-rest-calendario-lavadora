@@ -10,6 +10,7 @@ class Server {
 
 		this.userPath = '/api/users';
 		this.authPath = '/api/auth';
+		this.reservationPath = '/api/reservations';
 
 		this.middlewares();
 		this.dbConnect();
@@ -34,6 +35,7 @@ class Server {
 		});
 		this.app.use(this.userPath, require('../routes/user'));
 		this.app.use(this.authPath, require('../routes/auth'));
+		this.app.use(this.reservationPath, require('../routes/reservation'));
 	}
 
 	listen() {
