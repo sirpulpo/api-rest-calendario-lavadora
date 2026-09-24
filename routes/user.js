@@ -1,8 +1,8 @@
 const {Router} = require('express');
-const { check } = require('express-validator');
-const { createUser } = require('../controllers/user');
-const { validarCampos } = require('../middlewares');
-const { 
+const { check, body } = require('express-validator');
+const { createUser, updateNip } = require('../controllers/user');
+const { validarCampos, validarJWT } = require('../middlewares');
+const {
 	validName,
 	validAlias,
 	validColor,
@@ -24,6 +24,21 @@ router.post(
 		validarCampos
 	],
 	createUser
+);
+
+router.patch(
+	'/nip',
+	[
+		validarJWT,
+		body('currentNip', 'Current NIP is required').notEmpty(),
+		body('newNip', 'New NIP is required').notEmpty().bail()
+			.isLength({ min: 4, max: 4 }).withMessage('NIP must be 4 digits').bail()
+			.isNumeric({ no_symbols: true }).withMessage('NIP must be 4 digits').bail()
+			.custom((value, { req }) => value !== req.body.currentNip)
+			.withMessage('New NIP must be different from current NIP'),
+		validarCampos,
+	],
+	updateNip
 );
 
 module.exports = router;

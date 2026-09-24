@@ -12,12 +12,18 @@ const validarJWT = async (req, res, next) => {
 	}
 
 	try {
-		const { uid } = jwt.verify(token, process.env.SECRET_KEY);
+		const { uid, iat } = jwt.verify(token, process.env.SECRET_KEY);
 
 		const user = await User.findById(uid);
 		if (!user) {
 			return res.status(401).json({
 				msg: 'Invalid token - user does not exist',
+			});
+		}
+
+		if (user.nipChangedAt && Math.floor(user.nipChangedAt.getTime() / 1000) > iat) {
+			return res.status(401).json({
+				msg: 'Invalid token - NIP was changed, please log in again',
 			});
 		}
 
